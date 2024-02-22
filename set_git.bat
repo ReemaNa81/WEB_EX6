@@ -8,5 +8,5 @@ git init
 git add .
 git commit -m "second commit"
 git branch -M main
-git remote add origin https://github.com/ReemaNa81/web_ex6.git
+git remote add origin https://github.com/ReemaNa81/WEB_EX6
 git push -u origin main
