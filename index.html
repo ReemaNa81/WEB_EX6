@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fetch API</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    const url = "https://dummyjson.com/products";
+    const opt = {
+      mode: "cors", // cross domain request is allowed
+    };
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    // async fetch - option 1
+    const fetchText1 = async () => {
+      try {
+        let response = await fetch(url, opt);
+        let data = await response.json();
+        createTable(data);
+        console.log(data);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    const createTableHeader = () => {
+      return `<tr class="border-2">
+        <th>Title</th>
+        <th>Description</th>
+        <th>Price</th>
+      </tr>`;
+    }
+
+    const createRow = (row) => {
+      return `<tr class="border-4">
+        <td class="border-2">${row.title}</td>
+        <td class="border-2">${row.description}</td>
+        <td class="border-2">${row.price}</td>
+      </tr>`;
+    }
+
+    const createTable = (data) => {
+      let container = document.getElementById("myTable");
+      let table = `<table>${createTableHeader()}`;
+
+      // Display items based on the current page and items per page
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      data.products.slice(startIndex, endIndex).forEach((dataRow) => {
+        table = table + createRow(dataRow);
+      });
+
+      table = table + `</table>`;
+      container.innerHTML = table;
+
+      // Add navigation buttons
+      addNavigationButtons(data.products.length);
+    }
+
+    const addNavigationButtons = (totalItems) => {
+  let container = document.getElementById("myTable");
+  let totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // Previous button
+  let buttonsHTML = `<button class="px-3 py-2 mx-1 bg-blue-500 text-white rounded-md hover:bg-blue-600" onclick="navigate(-1)" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>`;
+
+  // Page indicator
+  buttonsHTML += `<span class="text-lg font-bold mx-2">Page ${currentPage} of ${totalPages}</span>`;
+
+  // Next button
+  buttonsHTML += `<button class="px-3 py-2 mx-1 bg-blue-500 text-white rounded-md hover:bg-blue-600" onclick="navigate(1)" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
+
+  // Display navigation buttons at the bottom and center
+  container.innerHTML += `<div class="text-center mt-4">${buttonsHTML}</div>`;
+}
+
+
+
+    // Function to navigate to the next or previous page
+    const navigate = (direction) => {
+      currentPage += direction;
+      fetchText1();
+    }
+
+    fetchText1();
+  </script>
+</head>
+<body>
+  <div id="myTable"></div>
+  <script>
+    // custom config for the MTW app 
+    const mtwAppConfig = {
+        border: true // app border in the MTW page                    
+    }
+
+    ///////////////////////////////////////////////////////
+    // implement this functions in order to use private API        
+    const sendPrivateApiRequest = async () => {
+        // your code here:
+        // sendRequestToParent({ cat: 'getAssets' })
+    }        
+
+    const acceptPrivateApiResponse = async (data) => {
+        // process received data here:
+        // console.log(data)
+    }
+
+    // use this in order to send on document load
+    document.addEventListener('DOMContentLoaded', () => {
+        // your code here:
+        //sendRequestToParent({ method: 'getAssets' })
+    })
+
+</script>
+<script src="https://morethanwallet.com/appstore/index.js"></script>
+</body>
+</html>
